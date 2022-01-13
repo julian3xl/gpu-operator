@@ -917,6 +917,10 @@ func TransformDCGMExporter(obj *appsv1.DaemonSet, config *gpuv1.ClusterPolicySpe
 		}
 		metricsConfigVol := corev1.Volume{Name: "metrics-config", VolumeSource: metricsConfigVolumeSource}
 		obj.Spec.Template.Spec.Volumes = append(obj.Spec.Template.Spec.Volumes, metricsConfigVol)
+
+		if len(config.DCGMExporter.Args) == 0 {
+			obj.Spec.Template.Spec.Containers[0].Args = []string{"-f", MetricsConfigMountPath}
+		}
 	}
 
 	release, err := parseOSRelease()
